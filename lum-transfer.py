@@ -89,59 +89,59 @@ def match_color(target_img, source_img, mode='pca', eps=1e-5):
     return matched_img	
 	
 if cp_mode == 'lum':
-	    style_img = args.style_image
-	    content_img = args.content_image
-            org_content = args.org_content
-	    org_content = imageio.imread(org_content, pilmode="RGB").astype(float)/256
-            style_img = imageio.imread(style_img, pilmode="RGB").astype(float)/256
-	    content_img = imageio.imread(content_img, pilmode="RGB").astype(float)/256
-	    
-            org_content = content_img.copy()
-            style_img = lum_transform(style_img)
-	    content_img = lum_transform(content_img)
-            style_img -= style_img.mean(0).mean(0)
-            style_img += content_img.mean(0).mean(0)
-	
-	    style_img [style_img < 0 ] = 0
-	    style_img [style_img > 1 ] = 1
+    style_img = args.style_image
+    content_img = args.content_image
+    org_content = args.org_content
+    org_content = imageio.imread(org_content, pilmode="RGB").astype(float)/256
+    style_img = imageio.imread(style_img, pilmode="RGB").astype(float)/256
+    content_img = imageio.imread(content_img, pilmode="RGB").astype(float)/256
 
-	    content_img [content_img < 0 ] = 0
-	    content_img [content_img > 1 ] = 1
+    org_content = content_img.copy()
+    style_img = lum_transform(style_img)
+    content_img = lum_transform(content_img)
+    style_img -= style_img.mean(0).mean(0)
+    style_img += content_img.mean(0).mean(0)
 
-	    imsave(output_content_name, content_img)
-            imsave(output_style_name, style_img)
+    style_img [style_img < 0 ] = 0
+    style_img [style_img > 1 ] = 1
+
+    content_img [content_img < 0 ] = 0
+    content_img [content_img > 1 ] = 1
+
+    imsave(output_content_name, content_img)
+    imsave(output_style_name, style_img)
 elif cp_mode =='match':
-	    style_img = args.style_image
-	    content_img = args.content_image
-	    style_img = imageio.imread(style_img, pilmode="RGB").astype(float)/256
-	    content_img = imageio.imread(content_img, pilmode="RGB").astype(float)/256
+    style_img = args.style_image
+    content_img = args.content_image
+    style_img = imageio.imread(style_img, pilmode="RGB").astype(float)/256
+    content_img = imageio.imread(content_img, pilmode="RGB").astype(float)/256
 
-            style_img = match_color(style_img, content_img, mode='pca')
+    style_img = match_color(style_img, content_img, mode='pca')
 
-	    imsave(output_style_name, style_img)
+    imsave(output_style_name, style_img)
 elif cp_mode == 'match_style':
-	    style_img = args.style_image
-	    content_img = args.content_image
- 	    style_img = imageio.imread(style_img, pilmode="RGB").astype(float)/256
-	    content_img = imageio.imread(content_img, pilmode="RGB").astype(float)/256
+    style_img = args.style_image
+    content_img = args.content_image
+    style_img = imageio.imread(style_img, pilmode="RGB").astype(float)/256
+    content_img = imageio.imread(content_img, pilmode="RGB").astype(float)/256
 
-            content_img = match_color(content_img, style_img, mode='pca')
-		
-	    imsave(output_content_name, content_img)
+    content_img = match_color(content_img, style_img, mode='pca')
+
+    imsave(output_content_name, content_img)
 elif cp_mode == 'lum2':
-            output = args.output_lum2
-            org_content = args.org_content
-	    org_content = imageio.imread(org_content, pilmode="RGB").astype(float)/256
-	    output = imageio.imread(output, pilmode="RGB").astype(float)/256
-	
-	    org_content = skimage.transform.resize(org_content, output.shape)
-		
-            org_content = rgb2luv(org_content)
-            org_content[:,:,0] = output.mean(2)
-            output = luv2rgb(org_content)
-            output[output<0] = 0
-            output[output>1]=1
-	    imsave(output_a_name, output)	   
+    output = args.output_lum2
+    org_content = args.org_content
+    org_content = imageio.imread(org_content, pilmode="RGB").astype(float)/256
+    output = imageio.imread(output, pilmode="RGB").astype(float)/256
+
+    org_content = skimage.transform.resize(org_content, output.shape)
+
+    org_content = rgb2luv(org_content)
+    org_content[:,:,0] = output.mean(2)
+    output = luv2rgb(org_content)
+    output[output<0] = 0
+    output[output>1]=1
+    imsave(output_a_name, output)	   
 else:
-            raise NameError('Unknown colour preservation mode')
+    raise NameError('Unknown colour preservation mode')
 			
